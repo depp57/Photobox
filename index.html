@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <title>Photobox</title>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark mb-5">
+
+    <button id="load_gallery">load</button>
+
+    <h1 class="text-white pl-5">Photobox</h1>
+    <div>
+        <button id="previous">prev page</button>
+        <button id="next">next page</button>
+    </div>
+</nav>
+
+
+<main id="gallery">
+<!-- Toutes les vignettes générées avec ajax -->
+</main>
+
+
+<div id="lightbox_container" class="lightbox_container">
+    <!-- Là ou la lightbox va s'insérer -->
+</div>
+
+
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/axios/dist/axios.js"></script>
+<script type="module" src="js/photobox.js"></script>
+
+</body>
+</html>
