@@ -27,8 +27,8 @@ function initHandlers() {
             icon.toggleClass('moon-icon');
             icon.toggleClass('sun-icon');
 
-            let color = icon.hasClass('sun-icon') ? '#282f35' : 'white';
-            $(document.body).animate({backgroundColor:color}, speed);
+            $(document.body).toggleClass('dark-theme');
+            $(document.body).toggleClass('white-theme');
 
             icon.fadeIn(speed);
         });

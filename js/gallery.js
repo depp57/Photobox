@@ -9,7 +9,7 @@ function displayError(error) {
     let gallery = $('#gallery');
     gallery.empty();
 
-    gallery.append($(`<div class="text-center display-1">${error}</div>`));
+    gallery.append(`<div class="text-center display-1 alert alert-danger">${error}</div>`);
 }
 
 export function loadData(promise, uri) {
@@ -32,11 +32,10 @@ function displayGallery() {
     gallery.append(container);
 
     let photoID = 0;
-
     CONF.data.photos.forEach(photo => {
         let img = $('<div class="m-2">');
-        img.append($(`<img photoID=${photoID++} src="https://webetu.iutnc.univ-lorraine.fr/${photo.photo.original.href}" height="265">`));
-        img.append($(`<p class="text-center">${photo.photo.titre}</p>`));
+        img.append(`<img photoID=${photoID++} src="https://webetu.iutnc.univ-lorraine.fr/${photo.photo.original.href}" height="265">`);
+        img.append(`<p class="text-center">${photo.photo.titre}</p>`);
         container.append(img);
     });
 }

@@ -1,11 +1,10 @@
-import {CONF} from "./photoloader";
+import {CONF, loadDetails} from "./photoloader";
 import {loadPreOrNextGallery} from "./gallery";
 
 let lightboxContainer = $('#lightbox_container');
 
 export function displayLightbox(photoID) {
-    let url = getURLbyID(photoID);
-    generateDOM(url);
+    generateDOM(photoID);
 
     lightboxContainer.fadeIn().css("display","flex");
     $(document.body).css('overflow-y', 'hidden');
@@ -25,10 +24,11 @@ function getURLbyID(photoID) {
     return CONF.server_url + CONF.data.photos[photoID].photo.original.href;
 }
 
-function generateDOM(url) {
+function generateDOM(photoID) {
+    let url = getURLbyID(photoID);
     lightboxContainer.empty();
 
-    lightboxContainer.append($(
+    lightboxContainer.append(
         '        <div id="lightbox_content" class="lightbox_content">\n' +
             '        <div id="lightbox-head">\n' +
             '            <p id="lightbox_close" class="text-white display-3 lightbox_close">-X-</p>\n' +
@@ -42,8 +42,43 @@ function generateDOM(url) {
 
         //Là où il faut insérer la table
 
-        '        </div>')
+        '        </div>'
     );
+
+    generatePhotoDetailsDOM(photoID);
+}
+
+function generatePhotoDetailsDOM(photoID) {
+    let promise = loadDetails(CONF.data.photos[photoID].photo.id);
+    promise.then((details) => {
+        let lightBoxContent = $('#lightbox_content');
+        //Table contenant les détails
+        let table = $('<table class="table table-dark">');
+
+        //Header de la table
+        table.append('<thead><tr><th scope="col" class="h4">Nom du champ</th><th scope="col" class="h4">Description</th></tr></thead>');
+
+        //Contenu de la table
+        let body = $('<tbody id="tbody">');
+        let photo = details.data.photo;
+        //On change le titre de la photo
+        $('#lightbox_title').text(photo.titre);
+
+        Object.keys(photo).forEach((detail) => {
+            if (detail !== 'url')
+                body.append(`<tr><td id="champ_${detail}" class="font-weight-bold">${detail}</td><td id="desc_${detail}">${photo[detail]}</td></tr>`);
+            else
+                body.append(`<tr><td id="champ_${detail}" class="font-weight-bold">${detail}</td><td id="desc_${detail}">${CONF.server_url}${photo[detail].href}</td></tr>`);
+        });
+
+        table.append(body);
+        lightBoxContent.append(table);
+    })
+        .catch(() => displayError('Erreur du chargement des détails de la photo'));
+}
+
+function displayError(error) {
+    $('#lightbox_content').append(`<div class="text-center h1 alert alert-danger">${error}</div>`);
 }
 
 function loadPreOrNextImg(next=true) {
@@ -65,39 +100,25 @@ function loadPreOrNextImg(next=true) {
 }
 
 function changePhoto(photoID) {
+    //Met à jour la photo
     $('#lightbox_full_img').attr('src', getURLbyID(photoID));
+
+    //Met à jour les détails de la photo sans recréer le DOM
+    let promise = loadDetails(CONF.data.photos[photoID].photo.id);
+    promise.then((details) => {
+        let tableBody = $('#tbody');
+        let photo = details.data.photo;
+
+        //On change le titre de la photo
+        $('#lightbox_title').text(photo.titre);
+
+        Object.keys(photo).forEach((detail) => {
+            if (detail !== 'url')
+                tableBody.find(`#desc_${detail}`).text(photo[detail]);
+            else
+                tableBody.find(`#desc_${detail}`).text(photo[detail].href);
+
+        });
+    })
+        .catch(() => displayError('Erreur du chargement des détails de la photo'));
 }
-
-
-/*
-<table class="table table-dark">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-            </tr>
-            </tbody>
-        </table>
- */

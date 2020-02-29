@@ -11,41 +11,34 @@
 
     overflow-y: auto;
 }
-
 .lightbox_container img {
     width: 100%;
     border: 4px white solid;
     border-radius: 5px;
     text-align: center;
 }
-
 .lightbox-img {
     width: 100%;
     height: auto;
 }
-
 .lightbox-img > img {
     width: 100%;
 }
-
 .lightbox_content {
     text-align: center;
     width: 80%;
     height: 90%;
 }
-
 .lightbox_close {
     position: fixed;
     right: 4%;
     top: 8%;
 }
-
 .lightbox_close:hover {
     cursor: pointer;
     transition-duration: 1s;
     transform: scale(1.15);
 }
-
 .lightbox_arrow {
     font-size: 6vw;
     font-weight: 300;
@@ -81,11 +74,17 @@ THEME ICON IN NAVBAR
 .moon-icon {
     background-image: url("moon.png");
 }
-
 .sun-icon {
     background-image: url("sun.png");
 }
 
 .dark-theme {
     background-color: #282f35;
+    color: white;
+    transition: 300ms;
+}
+.white-theme {
+    background-color: white;
+    color: black;
+    transition: 300ms;
 }
