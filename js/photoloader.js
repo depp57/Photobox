@@ -14,3 +14,8 @@ export function loadDetails(photoID) {
     let url = CONF.server_url + '/www/canals5/photobox/photos/' + photoID;
     return axios.get(url, {withCredentials:CONF.withCredentials});
 }
+
+export function loadComments(photoID) {
+    let url = CONF.server_url + '/www/canals5/photobox/photos/' + photoID + '/comments';
+    return axios.get(url, {withCredentials:CONF.withCredentials});
+}

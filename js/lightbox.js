@@ -1,4 +1,4 @@
-import {CONF, loadDetails} from "./photoloader";
+import {CONF, loadComments, loadDetails} from "./photoloader";
 import {loadPreOrNextGallery} from "./gallery";
 
 let lightboxContainer = $('#lightbox_container');
@@ -29,23 +29,25 @@ function generateDOM(photoID) {
     lightboxContainer.empty();
 
     lightboxContainer.append(
-        '        <div id="lightbox_content" class="lightbox_content">\n' +
-            '        <div id="lightbox-head">\n' +
-            '            <p id="lightbox_close" class="text-white display-3 lightbox_close">-X-</p>\n' +
-            '            <h1 id="lightbox_title" class="text-white">titre photo</h1>\n' +
-            '        </div>\n' +
-            '        <div id="lightbox-img" class="lightbox_img pt-2 mb-1">\n' +
-            '            <a id="lightbox_prev" class="text-white lightbox_arrow lightbox_arrow_left ml-4">&#10094;</a>\n' +
-            `            <img id="lightbox_full_img" src="${url}">\n` +
-            '            <a id="lightbox_next" class="text-white lightbox_arrow lightbox_arrow_right mr-4">&#10095;</a>\n' +
-            '        </div>' +
+        '        <div id="lightbox_content" class="lightbox_content">' +
+                    '<div id="lightbox-head">' +
+                        '<p id="lightbox_close" class="text-white display-3 lightbox_close">-X-</p>' +
+                        '<h1 id="lightbox_title" class="text-white">titre photo</h1>' +
+                    '</div>' +
+                    '<div id="lightbox-img" class="lightbox_img pt-2 mb-1">' +
+                        '<a id="lightbox_prev" class="text-white lightbox_arrow lightbox_arrow_left ml-4">&#10094;</a>' +
+                        `<img id="lightbox_full_img" src="${url}">` +
+                        '<a id="lightbox_next" class="text-white lightbox_arrow lightbox_arrow_right mr-4">&#10095;</a>' +
+                    '</div>' +
 
-        //Là où il faut insérer la table
-
-        '        </div>'
+                    '<ul class="bg-dark menu">' +
+                        '<li id="menu-details"><p class="text-white h4">Afficher les détails de la photo</p>'+
+                        '<li id="menu-comments"><p class="text-white h4">Afficher ou ajouter un commentaire à la photo</p>' +
+                '</div>'
     );
 
     generatePhotoDetailsDOM(photoID);
+    generateCommentsDOM(photoID);
 }
 
 function generatePhotoDetailsDOM(photoID) {
@@ -53,28 +55,69 @@ function generatePhotoDetailsDOM(photoID) {
     promise.then((details) => {
         let lightBoxContent = $('#lightbox_content');
         //Table contenant les détails
-        let table = $('<table class="table table-dark">');
+        let table = $('<table id="table-details" class="table table-dark" style="display:none">');
 
         //Header de la table
         table.append('<thead><tr><th scope="col" class="h4">Nom du champ</th><th scope="col" class="h4">Description</th></tr></thead>');
 
         //Contenu de la table
-        let body = $('<tbody id="tbody">');
+        let body = $('<tbody id="tbody-details">');
         let photo = details.data.photo;
         //On change le titre de la photo
         $('#lightbox_title').text(photo.titre);
 
         Object.keys(photo).forEach((detail) => {
             if (detail !== 'url')
-                body.append(`<tr><td id="champ_${detail}" class="font-weight-bold">${detail}</td><td id="desc_${detail}">${photo[detail]}</td></tr>`);
+                body.append(`<tr><td class="font-weight-bold">${detail}</td><td id="desc_d_${detail}">${photo[detail]}</td></tr>`);
             else
-                body.append(`<tr><td id="champ_${detail}" class="font-weight-bold">${detail}</td><td id="desc_${detail}">${CONF.server_url}${photo[detail].href}</td></tr>`);
+                body.append(`<tr><td class="font-weight-bold">${detail}</td><td id="desc_d_${detail}">${CONF.server_url}${photo[detail].href}</td></tr>`);
         });
 
         table.append(body);
         lightBoxContent.append(table);
+
+        //Ajout du handler pour afficher les commentaires
+        $('#menu-details').click(() => $('#table-details').toggle('slow'));
+
     })
-        .catch(() => displayError('Erreur du chargement des détails de la photo'));
+        .catch(() => displayError('Erreur lors du chargement des détails de la photo'));
+}
+
+function generateCommentsDOM(photoID) {
+    let promise = loadComments(CONF.data.photos[photoID].photo.id);
+    promise.then((comments) => {
+        let lightBoxContent = $('#lightbox_content');
+        //Table contenant les commentaires
+        let table = $('<table id="table-comments" class="table table-dark" style="display:none">');
+
+        //Header de la table
+        table.append('<thead><tr>' +
+                        '<th scope="col" class="h4">No</th>' +
+                        '<th scope="col" class="h4">Titre</th>' +
+                        '<th scope="col" class="h4">Pseudo</th>' +
+                        '<th scope="col" class="h4">Corps</th>' +
+                        '<th scope="col" class="h4">Date</th>' +
+                    '</tr></thead>');
+
+        //Contenu de la table
+        let body = $('<tbody id="tbody-comments">');
+
+
+        let num = 1;
+        comments.data.comments.forEach((comment) => {
+            body.append(`<tr>
+                            <td class="font-weight-bold">${num++}</td>
+                            <td id="desc_c_title">${comment.titre}</td>
+                            <td id="desc_c_nickname">${comment.pseudo}</td>
+                            <td id="desc_c_content">${comment.content}</td>
+                            <td id="desc_c_date">${comment.date}</td>`)});
+
+        table.append(body);
+        lightBoxContent.append(table);
+        //Ajout du handler pour afficher les commentaires
+        $('#menu-comments').click(() => $('#table-comments').toggle('slow'));
+    })
+        .catch((e) => displayError('Erreur lors du chargement des commentaires de la photo' + e));
 }
 
 function displayError(error) {
@@ -104,9 +147,9 @@ function changePhoto(photoID) {
     $('#lightbox_full_img').attr('src', getURLbyID(photoID));
 
     //Met à jour les détails de la photo sans recréer le DOM
-    let promise = loadDetails(CONF.data.photos[photoID].photo.id);
-    promise.then((details) => {
-        let tableBody = $('#tbody');
+    let promiseDetails = loadDetails(CONF.data.photos[photoID].photo.id);
+    promiseDetails.then((details) => {
+        let tableBody = $('#tbody-details');
         let photo = details.data.photo;
 
         //On change le titre de la photo
@@ -114,11 +157,29 @@ function changePhoto(photoID) {
 
         Object.keys(photo).forEach((detail) => {
             if (detail !== 'url')
-                tableBody.find(`#desc_${detail}`).text(photo[detail]);
+                tableBody.find(`#desc_d_${detail}`).text(photo[detail]);
             else
-                tableBody.find(`#desc_${detail}`).text(photo[detail].href);
+                tableBody.find(`#desc_d_${detail}`).text(photo[detail].href);
 
         });
     })
-        .catch(() => displayError('Erreur du chargement des détails de la photo'));
+        .catch(() => displayError('Erreur lors du chargement des détails de la photo'));
+
+
+    //Met à jour les commentaires de la photo sans recréer le DOM
+    let promiseComments = loadComments(CONF.data.photos[photoID].photo.id);
+    promiseComments.then((data) => {
+        let tableBody = $('#tbody-comments');
+        tableBody.empty();
+
+        let num = 1;
+        data.data.comments.forEach((comment) => {
+            tableBody.append(`<tr>
+                            <td class="font-weight-bold">${num++}</td>
+                            <td id="desc_c_title">${comment.titre}</td>
+                            <td id="desc_c_nickname">${comment.pseudo}</td>
+                            <td id="desc_c_content">${comment.content}</td>
+                            <td id="desc_c_date">${comment.date}</td>`)});
+    })
+        .catch((e) => displayError('Erreur lors du chargements des commentaires de la photo' + e));
 }

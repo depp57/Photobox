@@ -64,6 +64,25 @@
 }
 
 /*
+MENU DEROULANT DANS LIGHTBOX
+ */
+.menu {
+    list-style: none;
+    cursor: pointer;
+    padding-left: 0;
+}
+
+.menu > li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.menu > li:first-child {
+    border-bottom: white solid;
+}
+
+
+/*
 THEME ICON IN NAVBAR
 */
 .icon {
