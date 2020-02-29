@@ -65,7 +65,7 @@
 
 /*
 THEME ICON IN NAVBAR
- */
+*/
 .icon {
     cursor: pointer;
     width: 32px;
@@ -87,4 +87,33 @@ THEME ICON IN NAVBAR
     background-color: white;
     color: black;
     transition: 300ms;
+}
+
+
+/*
+----- FOOTER -----
+*/
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.footer-github {
+    width: 32px;
+    height: 32px;
+    background-image: url("github.png");
+    vertical-align: top;
+}
+
+.footer {
+    flex-shrink: 0;
 }
