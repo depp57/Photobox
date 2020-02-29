@@ -1,28 +1,28 @@
+import {CONF} from "./photoloader";
+import {loadPreOrNextGallery} from "./gallery";
+
 let lightboxContainer = $('#lightbox_container');
 
-export function displayLightbox(url) {
+export function displayLightbox(photoID) {
+    let url = getURLbyID(photoID);
     generateDOM(url);
 
     lightboxContainer.fadeIn().css("display","flex");
     $(document.body).css('overflow-y', 'hidden');
 
-    $('#lightbox_close').click(function () {
+    $('#lightbox_close').click(() => {
         lightboxContainer.fadeOut().css("display","flex");
         $(document.body).css('overflow-y', 'auto');
         lightboxContainer.empty();
     });
 
-    $('#lightbox_prev').click(function () {
-        loadPreOrNextImg(false);
-    });
-
-    $('#lightbox_next').click(function () {
-        loadPreOrNextImg(true);
-    });
+    $('#lightbox_prev').click(() => loadPreOrNextImg(false));
+    $('#lightbox_next').click(() => loadPreOrNextImg(true));
 }
 
-function loadPreOrNextImg(next=true) {
-    console.log(next)
+function getURLbyID(photoID) {
+    CONF.currentPhoto = photoID;
+    return CONF.server_url + CONF.data.photos[photoID].photo.original.href;
 }
 
 function generateDOM(url) {
@@ -44,6 +44,28 @@ function generateDOM(url) {
 
         '        </div>')
     );
+}
+
+function loadPreOrNextImg(next=true) {
+    //Si on switch de gallerie
+    if (next && parseInt(CONF.currentPhoto) === CONF.data.photos.length-1) {
+        loadPreOrNextGallery(true).then(() => {
+            CONF.currentPhoto = 0;
+            changePhoto(CONF.currentPhoto);
+        });
+    }
+    else if (!next && parseInt(CONF.currentPhoto) === 0) {
+        loadPreOrNextGallery(false).then(() => {
+            CONF.currentPhoto = CONF.data.photos.length-1;
+            changePhoto(CONF.currentPhoto);
+        });
+    }
+    else
+        next ? changePhoto(++CONF.currentPhoto) : changePhoto(--CONF.currentPhoto);
+}
+
+function changePhoto(photoID) {
+    $('#lightbox_full_img').attr('src', getURLbyID(photoID));
 }
 
 

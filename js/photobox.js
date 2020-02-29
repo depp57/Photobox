@@ -1,8 +1,8 @@
-import {init as initLoader} from "./photoloader";
+import {init as initLoader, load} from "./photoloader";
 import {init as initGallery, loadData, loadPreOrNextGallery} from "./gallery";
 import {displayLightbox} from "./lightbox";
 
-$(document).ready(function () {
+$(document).ready(() => {
     initLoader('https://webetu.iutnc.univ-lorraine.fr');
     initGallery();
     initHandlers();
@@ -10,9 +10,27 @@ $(document).ready(function () {
 
 function initHandlers() {
     let bLoad =  $('#load_gallery');
-    bLoad.click(() => loadData('/www/canals5/photobox/photos/?size=12'));
+    bLoad.click(() => {
+        let uri = '/www/canals5/photobox/photos/?offset=0&size=12';
+        loadData(load(uri), uri);
+    });
 
-    $('#gallery').on('click', 'img', (e) => displayLightbox(e.target.src));
+    $('#gallery').on('click', 'img', (e) => displayLightbox(e.target.getAttribute('photoid')));
     $('#previous').click(() => loadPreOrNextGallery(false));
     $('#next').click(() => loadPreOrNextGallery(true));
+
+    //Pour changer le thème (dark/light)
+    $('#theme-icon').click((e) => {
+        let icon = $(e.target);
+        const speed = 300;
+        icon.fadeOut(speed, () => {
+            icon.toggleClass('moon-icon');
+            icon.toggleClass('sun-icon');
+
+            let color = icon.hasClass('sun-icon') ? '#282f35' : 'white';
+            $(document.body).animate({backgroundColor:color}, speed);
+
+            icon.fadeIn(speed);
+        });
+    });
 }

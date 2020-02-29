@@ -1,6 +1,5 @@
 import {load} from "./photoloader";
-
-let CONF = {};
+import {CONF} from "./photoloader";
 
 export function init() {
     CONF.galleryID = 'TODO';
@@ -13,14 +12,13 @@ function displayError(error) {
     gallery.append($(`<div class="text-center display-1">${error}</div>`));
 }
 
-export function loadData(uri) {
-    let promise = load(uri);
+export function loadData(promise, uri) {
     promise.then(photos => {
             CONF.currentUri = uri;
             CONF.data = photos.data;
             displayGallery()
         })
-        .catch(() => displayError('Erreur lors du chargement de la gallerie'));
+        .catch((e) => displayError('Erreur lors du chargement de la gallerie' + e));
 }
 
 /**
@@ -33,9 +31,11 @@ function displayGallery() {
     let container = $('<div class="d-flex flex-wrap justify-content-center align-content-center">');
     gallery.append(container);
 
+    let photoID = 0;
+
     CONF.data.photos.forEach(photo => {
         let img = $('<div class="m-2">');
-        img.append($(`<img src="https://webetu.iutnc.univ-lorraine.fr/${photo.photo.original.href}" height="265">`));
+        img.append($(`<img photoID=${photoID++} src="https://webetu.iutnc.univ-lorraine.fr/${photo.photo.original.href}" height="265">`));
         img.append($(`<p class="text-center">${photo.photo.titre}</p>`));
         container.append(img);
     });
@@ -61,6 +61,8 @@ export function loadPreOrNextGallery(next = true) {
         if (uri === '/www/canals5/photobox/photos/?offset=108&size=12')
             uri = '/www/canals5/photobox/photos/?offset=96&size=12';
 
-        loadData(uri);
+        let promise = load(uri);
+        loadData(promise, uri);
+        return promise;
     }
 }

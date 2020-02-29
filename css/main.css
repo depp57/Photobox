@@ -64,8 +64,28 @@
     left: 0;
 }
 .lightbox_arrow_left:hover {
-    transform: translateX(-40%);
+    transform: translateX(-20%);
 }
 .lightbox_arrow_right:hover {
-    transform: translateX(40%);
+    transform: translateX(20%);
+}
+
+/*
+THEME ICON IN NAVBAR
+ */
+.icon {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+}
+.moon-icon {
+    background-image: url("moon.png");
+}
+
+.sun-icon {
+    background-image: url("sun.png");
+}
+
+.dark-theme {
+    background-color: #282f35;
 }

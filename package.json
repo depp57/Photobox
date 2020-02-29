@@ -1,0 +1,25 @@
+{
+  "name": "photobox",
+  "version": "1.0.0",
+  "description": "Projet de javascript - DUT informatique",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/depp57/Photobox.git"
+  },
+  "author": "Sacha Thommet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/depp57/Photobox/issues"
+  },
+  "homepage": "https://github.com/depp57/Photobox#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "jquery-ui-dist": "^1.12.1"
+  }
+}
