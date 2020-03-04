@@ -1,10 +1,6 @@
 import {load} from "./photoloader";
 import {CONF} from "./photoloader";
 
-export function init() {
-    CONF.galleryID = 'TODO';
-}
-
 function displayError(error) {
     let gallery = $('#gallery');
     gallery.empty();
@@ -16,9 +12,9 @@ export function loadData(promise, uri) {
     promise.then(photos => {
             CONF.currentUri = uri;
             CONF.data = photos.data;
-            displayGallery()
+            displayGallery();
         })
-        .catch((e) => displayError('Erreur lors du chargement de la gallerie' + e));
+        .catch(() => displayError('Erreur lors du chargement de la gallerie'));
 }
 
 /**

@@ -1,7 +1,8 @@
-import {CONF, loadComments, loadDetails} from "./photoloader";
+import {CONF, loadComments, loadDetails, postComment} from "./photoloader";
 import {loadPreOrNextGallery} from "./gallery";
 
 let lightboxContainer = $('#lightbox_container');
+
 
 export function displayLightbox(photoID) {
     generateDOM(photoID);
@@ -42,12 +43,14 @@ function generateDOM(photoID) {
 
                     '<ul class="bg-dark menu">' +
                         '<li id="menu-details"><p class="text-white h4">Afficher les détails de la photo</p>'+
-                        '<li id="menu-comments"><p class="text-white h4">Afficher ou ajouter un commentaire à la photo</p>' +
+                        '<li id="menu-comments"><p class="text-white h4">Afficher les commentaires de la photo</p>' +
+                        '<li id="menu-addComment"><p class="text-white h4">Ajouter un commentaire à la photo</p>' +
                 '</div>'
     );
 
     generatePhotoDetailsDOM(photoID);
     generateCommentsDOM(photoID);
+    generateAddCommentDOM(photoID);
 }
 
 function generatePhotoDetailsDOM(photoID) {
@@ -117,7 +120,60 @@ function generateCommentsDOM(photoID) {
         //Ajout du handler pour afficher les commentaires
         $('#menu-comments').click(() => $('#table-comments').toggle('slow'));
     })
-        .catch((e) => displayError('Erreur lors du chargement des commentaires de la photo' + e));
+        .catch(() => displayError('Erreur lors du chargement des commentaires de la photo'));
+}
+
+function generateAddCommentDOM(photoID) {
+    let lightBoxContent = $('#lightbox_content');
+    let form = $('<table id="form-addComment" class="table bg-dark text-white" style="display:none">' +
+                    '<thead><tr>' +
+                        '<th scope="col" class="h4">Titre</th>' +
+                        '<th scope="col" class="h4">Pseudo</th>' +
+                        '<th scope="col" class="h4">Corps</th>' +
+                        '<th scope="col" class="h4"></th>' +
+                    '</tr></thead>' +
+                        '<td><input id="addComment-title" class="text-center" type="text"/></td>' +
+                        '<td><input id="addComment-nickname" class="text-center" type="text"/></td>' +
+                        '<td><textarea id="addComment-content" class="text-center" type="text"/></td>' +
+                        '<td><input id="addComment-send" class="text-center" type="submit" value="Envoyer!"/></td>' +
+                    '</table>');
+    lightBoxContent.append(form);
+
+    //Auto resize du textfield pour le contenu du commentaire
+    let textField = $('#addComment-content');
+    textField.on('input', () => textField.css('height', textField.prop('scrollHeight')+'px'));
+
+    //Ajout du handler pour envoyer la requete POST
+    $('#addComment-send').click(() => {
+        let comment = {};
+        let title = $('#addComment-title').val(), nickname = $('#addComment-nickname').val(), content = textField.val();
+        if (title === '' || nickname === '' || content === '')
+            alert('Veuillez renseigner les champs avant de poster un commentaire');
+        else {
+            comment.titre = title;
+            comment.pseudo = nickname;
+            comment.content = content;
+            let promise = postComment(CONF.data.photos[photoID].photo.id, comment);
+            promise.then(() => {
+                alert('Le commentaire a bien été posté !');
+
+                //Ajoute le commentaire à la photo sans avoir besoin de refaire une requete AJAX
+                let body = $('#tbody-comments');
+                let today = new Date();
+                body.prepend(`<tr>
+                        <td class="font-weight-bold">Nouveau</td>
+                        <td id="desc_c_title">${comment.titre}</td>
+                        <td id="desc_c_nickname">${comment.pseudo}</td>
+                        <td id="desc_c_content">${comment.content}</td>
+                        <td id="desc_c_date">${today.toLocaleDateString()}</td>`);
+            }
+            )
+                .catch(() => 'Erreur, le commentaire n\'a pas été posté.');
+        }
+    });
+
+    //Ajout du handler pour ajouter un commentaire
+    $('#menu-addComment').click(() => $('#form-addComment').toggle('slow'));
 }
 
 function displayError(error) {
@@ -181,5 +237,5 @@ function changePhoto(photoID) {
                             <td id="desc_c_content">${comment.content}</td>
                             <td id="desc_c_date">${comment.date}</td>`)});
     })
-        .catch((e) => displayError('Erreur lors du chargements des commentaires de la photo' + e));
+        .catch(() => displayError('Erreur lors du chargements des commentaires de la photo'));
 }

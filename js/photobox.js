@@ -1,10 +1,9 @@
 import {init as initLoader, load} from "./photoloader";
-import {init as initGallery, loadData, loadPreOrNextGallery} from "./gallery";
+import {loadData, loadPreOrNextGallery} from "./gallery";
 import {displayLightbox} from "./lightbox";
 
 $(document).ready(() => {
     initLoader('https://webetu.iutnc.univ-lorraine.fr');
-    initGallery();
     initHandlers();
 });
 
