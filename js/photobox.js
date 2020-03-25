@@ -1,6 +1,6 @@
-import {init as initLoader, load} from "./photoloader";
-import {loadData, loadPreOrNextGallery} from "./gallery";
-import {displayLightbox} from "./lightbox";
+import {init as initLoader, load} from "./photoloader.js";
+import {loadData, loadPreOrNextGallery} from "./gallery.js";
+import {displayLightbox} from "./lightbox.js";
 
 $(document).ready(() => {
     initLoader('https://webetu.iutnc.univ-lorraine.fr');

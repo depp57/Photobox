@@ -1,5 +1,5 @@
-import {CONF, loadComments, loadDetails, postComment} from "./photoloader";
-import {loadPreOrNextGallery} from "./gallery";
+import {CONF, loadComments, loadDetails, postComment} from "./photoloader.js";
+import {loadPreOrNextGallery} from "./gallery.js";
 
 let lightboxContainer = $('#lightbox_container');
 
@@ -16,7 +16,11 @@ export function displayLightbox(photoID) {
         lightboxContainer.empty();
 
         //Exit fullscreen
-        document.exitFullscreen();
+        if (document.fullscreenElement) {
+            document.exitFullscreen()
+        } else {
+            document.documentElement.requestFullscreen()
+        }
     });
 
     $('#lightbox_prev').click(() => loadPreOrNextImg(false));

@@ -1,5 +1,5 @@
-import {load} from "./photoloader";
-import {CONF} from "./photoloader";
+import {load} from "./photoloader.js";
+import {CONF} from "./photoloader.js";
 
 function displayError(error) {
     let gallery = $('#gallery');
