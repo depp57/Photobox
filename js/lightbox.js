@@ -16,11 +16,8 @@ export function displayLightbox(photoID) {
         lightboxContainer.empty();
 
         //Exit fullscreen
-        if (document.fullscreenElement) {
-            document.exitFullscreen()
-        } else {
-            document.documentElement.requestFullscreen()
-        }
+        if (document.fullscreenElement)
+            document.exitFullscreen();
     });
 
     $('#lightbox_prev').click(() => loadPreOrNextImg(false));
