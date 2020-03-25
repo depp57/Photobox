@@ -24,6 +24,7 @@
 .lightbox-img > img {
     width: 100%;
 }
+
 .lightbox_content {
     text-align: center;
     width: 80%;
@@ -38,6 +39,7 @@
     cursor: pointer;
     transition-duration: 1s;
     transform: scale(1.15);
+    color: red !important;
 }
 .lightbox_arrow {
     font-size: 6vw;
@@ -146,4 +148,12 @@ FORM ADD COMMENT TO A PHOTO
     min-height: 30px;
     max-height: 120px;
     height: fit-content;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

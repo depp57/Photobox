@@ -32,13 +32,13 @@ function generateDOM(photoID) {
     lightboxContainer.append(
         '        <div id="lightbox_content" class="lightbox_content">' +
                     '<div id="lightbox-head">' +
-                        '<p id="lightbox_close" class="text-white display-3 lightbox_close">-X-</p>' +
+                        '<p id="lightbox_close" class="text-white display-3 lightbox_close noselect">-X-</p>' +
                         '<h1 id="lightbox_title" class="text-white">titre photo</h1>' +
                     '</div>' +
                     '<div id="lightbox-img" class="lightbox_img pt-2 mb-1">' +
-                        '<a id="lightbox_prev" class="text-white lightbox_arrow lightbox_arrow_left ml-4">&#10094;</a>' +
+                        '<a id="lightbox_prev" class="text-white lightbox_arrow lightbox_arrow_left ml-4 noselect">&#10094;</a>' +
                         `<img id="lightbox_full_img" src="${url}">` +
-                        '<a id="lightbox_next" class="text-white lightbox_arrow lightbox_arrow_right mr-4">&#10095;</a>' +
+                        '<a id="lightbox_next" class="text-white lightbox_arrow lightbox_arrow_right mr-4 noselect">&#10095;</a>' +
                     '</div>' +
 
                     '<ul class="bg-dark menu">' +
