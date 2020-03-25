@@ -14,10 +14,16 @@ export function displayLightbox(photoID) {
         lightboxContainer.fadeOut().css("display","flex");
         $(document.body).css('overflow-y', 'auto');
         lightboxContainer.empty();
+
+        //Exit fullscreen
+        document.exitFullscreen();
     });
 
     $('#lightbox_prev').click(() => loadPreOrNextImg(false));
     $('#lightbox_next').click(() => loadPreOrNextImg(true));
+
+    //ToggleFullscreen
+    document.documentElement.requestFullscreen();
 }
 
 function getURLbyID(photoID) {
