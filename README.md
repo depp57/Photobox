@@ -20,6 +20,7 @@
 | ----------------------------------------------------------------------   |:---:|
 |   Naviguer dans la lightbox                                              |  <img src="./css/readmeImage.png" width="30"/>  |
 |   Affichage des commentaires sur une photo dans la lightbox              | <img src="./css/readmeImage.png" width="30"/>   |
+|    affichage des informations détaillées sur une photo dans la lightbox  | <img src="./css/readmeImage.png" width="30"/>   |
 |    Ajout de commentaires sur une photo en mode lightbox                  | <img src="./css/readmeImage.png" width="30"/>   |
 |   Naviguer dans la lightbox avec gestion de la pagination                | <img src="./css/readmeImage.png" width="30"/>   |
 
@@ -27,3 +28,4 @@
 | -------------------------------- |:---:|
 | Thème clair/sombre : *Cliquer sur l'icône en haut à gauche en forme de lune/soleil* |  <img src="./css/readmeImage.png" width="30"/>  |
 | Plein écran lors de l'affichage en mode lightbox : *Cliquer sur une image pour l'afficher en mode lightbox* |  <img src="./css/readmeImage.png" width="30"/>  |
+| Gestion de la pagination des galleries : *Cliquer sur le bouton Prev page alors qu'on est déjà sur la 1ère page affichera la dernière page (et inversement)* | <img src="./css/readmeImage.png" width="30"/> |
